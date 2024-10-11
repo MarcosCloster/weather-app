@@ -16,7 +16,7 @@
   <!-- Segundo Row -->
   <div class="row mt-4 d-flex align-items-center justify-content-center " style="min-height: 20vh;"> 
     <div class="col-md-5">
-      <div *ngIf="weather" class="card card-body align-items-center">
+      <div *ngIf="weather && weather.location && weather.current" class="card card-body align-items-center">
         <h1>{{weather.location.name}}</h1>
         <img src="{{weather.current.condition.icon}}" class="w-50 h-50">
         <h2 style="font-size: 3.3rem;">{{weather.current.temp_c}}°C</h2>
@@ -29,6 +29,16 @@
             <h2>Min: {{weather.forecast.forecastday[0].day.maxtemp_c}}°C</h2>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-4 d-flex align-items-center justify-content-center " style="min-height: 20vh;"> 
+    <div *ngFor="let day of weather.forecast.forecastday.slice(1,7)" class="col-md-2">
+      <div class="card card-body align-items-center">
+        <h3>{{ day.date | date:'EEEE' }}</h3> <!-- Muestra el día de la semana -->
+        <img [src]="day.day.condition.icon" class="w-50 h-50">
+        <h4 style="font-size: 1.5rem;">Avg: {{ day.day.avgtemp_c }}°C</h4> <!-- Temperatura promedio -->
+        <p>{{ day.day.condition.text }}</p> <!-- Texto de la condición -->
       </div>
     </div>
   </div>

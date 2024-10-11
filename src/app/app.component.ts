@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { WeatherService } from './service/weather.service'
+import { GeolocationService } from './service/geolocation.service';
 
 @Component({
   selector: 'app-root',
@@ -10,8 +11,8 @@ export class AppComponent implements OnInit{
 
   weather:any;
 
-  constructor(private weatherService : WeatherService){
-
+  constructor(private weatherService : WeatherService, private geoLocationSvc : GeolocationService){
+    this.getLocation();
   }
   ngOnInit(): void {
     
@@ -21,7 +22,9 @@ export class AppComponent implements OnInit{
     this.weatherService.getWeather(cityName)
     .subscribe(
       resp => this.weather = resp,
-      err => console.log(err)
+      err => {
+        alert('Ingrese una ciudad que exista')
+      }
     )
   }
 
@@ -31,4 +34,18 @@ export class AppComponent implements OnInit{
     cityName.focus()
     return false
   }
+
+  private async getLocation(): Promise<void> {
+    try {
+      const {coords} = await this.geoLocationSvc.getCurrentPosition()
+      //this.weather = this.weatherService.getWeatherByCoords(coords)
+      this.weatherService.getWeatherByCoords({ lat: coords.latitude, lon: coords.longitude }).subscribe(
+        resp => this.weather = resp,
+        err => console.log(err)
+      );
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
 }

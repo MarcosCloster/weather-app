@@ -1,5 +1,12 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http'
+import { HttpClient, HttpParams } from '@angular/common/http'
+import { last, Observable } from 'rxjs';
+
+interface Coord {
+  lat: number;
+  lon: number;
+}
+
 
 @Injectable({
   providedIn: 'root'
@@ -17,5 +24,10 @@ export class WeatherService {
 
   getWeather(nombre:string){
     return this.http.get(`${this.URI}&q=${nombre}&days=1`)
+  }
+
+  getWeatherByCoords(coord: Coord)
+  {
+    return this.http.get(`${this.URI}&q=${coord.lat},${coord.lon}&days=7`)
   }
 }
