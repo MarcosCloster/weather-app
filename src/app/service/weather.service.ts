@@ -11,7 +11,7 @@ export class WeatherService {
 
   constructor(private http : HttpClient) { 
 
-    this.URI = `http://api.weatherapi.com/v1/forecast.json?key=${this.apiKey}`
+    this.URI = `https://api.weatherapi.com/v1/forecast.json?key=${this.apiKey}`
 
   }
 
