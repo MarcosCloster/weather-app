@@ -23,7 +23,7 @@ export class WeatherService {
   }
 
   getWeather(nombre:string){
-    return this.http.get(`${this.URI}&q=${nombre}&days=1`)
+    return this.http.get(`${this.URI}&q=${nombre}&days=7`)
   }
 
   getWeatherByCoords(coord: Coord)
