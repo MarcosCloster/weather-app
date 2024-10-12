@@ -1,47 +1,137 @@
-<div class="container p-4">
-  <!-- Primer Row -->
-  <div class="row d-flex justify-content-center">
-    <div class="col-md-5">
-      <div class="card card-body">
+<div class="container p-4 ">
+  <div class="row " >
+    <!-- Columna Izquierda (Formulario + Día Actual) -->
+    <div class="col-md-8">
+      <!-- Cuadro Azul (Formulario) -->
+      <div class="card card-body mb-2">
         <form (submit)="submitLocation(cityName)">
-          <input type="text" class="form-control" placeholder="City Name" #cityName>
-          <div class="d-flex justify-content-center">
-            <button type="submit" class="btn btn-primary btn-block mt-2">Get Weather</button>
+          <div class="row d-flex justify-content-center align-items-center text-center">
+            <div class="col-md-9">
+              <input type="text" class="form-control" placeholder="City Name" #cityName>
+            </div>
+            <div class="col-md-3">
+              <button type="submit" class="btn btn-primary btn-block">Get Weather</button>
+            </div>
           </div>
         </form>
       </div>
-    </div>
-  </div>
 
-  <!-- Segundo Row -->
-  <div class="row mt-4 d-flex align-items-center justify-content-center " style="min-height: 20vh;"> 
-    <div class="col-md-5">
-      <div *ngIf="weather && weather.location && weather.current" class="card card-body align-items-center justify-content-center text-center">
-        <h1>{{weather.location.name}}</h1>
-        <img src="{{weather.current.condition.icon}}" class="w-50 h-50">
-        <h2 style="font-size: 3.3rem;">{{weather.current.temp_c}}°C</h2>
-        <h2 style="font-size: 2.5rem;">{{weather.current.condition.text}}</h2>
-        <div class="row">
-          <div class="col-md-6 w-auto h-auto" style="font-size: 2.5rem;">
-            <h2>Max: {{weather.forecast.forecastday[0].day.mintemp_c}}°C</h2>
+      <!-- Cuadro del Clima (Día Actual) -->
+      <div style=" min-height:85%;">
+        <div class="" >
+          <div *ngIf="weather && weather.location && weather.current" class="card card-body " style="height: max-content; ">
+            <div class="d-flex align-items-center">
+              <div class="col-md-6">
+                <h2>{{ weather.location.name }}</h2>
+                <p>Chance of Rain: {{weather.current.precip_mm}}%</p>
+                <h4 style="font-size: 2.4rem; margin-top: 1.5rem;" >{{ weather.current.temp_c }}°C</h4>
+              </div>
+              <div class="col-md-6 d-flex justify-content-center" style="width: 300px; height: 200px; overflow: hidden;">
+                <img src="{{ weather.current.condition.icon }}" class="img-fluid" alt="Weather icon" style="object-fit: cover; width: 100%; height: 100%; ">
+              </div>
+            </div>
           </div>
-          <div class="col-md-6 w-auto h-auto" style="font-size: 2.5rem;">
-            <h2>Min: {{weather.forecast.forecastday[0].day.maxtemp_c}}°C</h2>
+        </div>
+        <!-- Fila para Horarios -->
+        <div class="">
+          <div class="card card-body mt-2" *ngIf="weather && weather.location && weather.current">
+            <p>Today´s Forecast</p>
+            <div class="row justify-content-center"> <!-- Asegúrate de centrar las tarjetas en la fila -->
+              <div *ngFor="let hour of getFilteredHours(); let i = index" class="col-md-2"> 
+                <div class="text-center mt-1 d-flex align-items-center justify-content-center" 
+                    style="min-height: 6rem; "> <!-- Añadido padding y border-radius -->
+                  <div class="w-100 d-flex flex-column align-items-center text-center"> <!-- Centrado de texto -->
+                    <!-- Columna de la Hora -->
+                    <h3 class="m-0" style="font-size: 1.1rem; font-weight: normal;">
+                      {{ hour.time | date: 'shortTime' }}
+                    </h3>
+                    <!-- Columna del Ícono y Condición -->
+                    <img [src]="hour.condition.icon" class="img-fluid" alt="Weather icon" style="max-width: 50%; height: auto;">
+                    <p class="m-0">{{ hour.condition.text }}</p>
+                    <!-- Columna de Temperatura -->
+                    <p class="m-0" style="white-space: nowrap;">
+                      {{ hour.temp_c }}°C
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fila para mas informacion-->
+        <div class="info-row d-flex flex-grow-1">
+          <div class="card card-body mt-2" *ngIf="weather && weather.location && weather.current" style="height:10.85rem;">
+            <p>More Info</p>
+            <div class="row justify-content-center">
+                <div class="col-md-1 d-flex justify-content-end align-items-center" style="min-height: 1rem;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-thermometer-half" viewBox="0 0 16 16">
+                        <path d="M9.5 12.5a1.5 1.5 0 1 1-2-1.415V6.5a.5.5 0 0 1 1 0v4.585a1.5 1.5 0 0 1 1 1.415"/>
+                        <path d="M5.5 2.5a2.5 2.5 0 0 1 5 0v7.55a3.5 3.5 0 1 1-5 0zM8 1a1.5 1.5 0 0 0-1.5 1.5v7.987l-.167.15a2.5 2.5 0 1 0 3.333 0l-.166-.15V2.5A1.5 1.5 0 0 0 8 1"/>
+                    </svg>
+                </div>
+                <div class="col-md-5 d-flex justify-content-start align-items-center text-start">
+                    <p class="m-0" style="font-size: 1.3rem;">Real Feel: {{weather.current.feelslike_c}}°C</p>
+                </div>
+                <div class="col-md-1 d-flex justify-content-end align-items-center" style="min-height: 1rem;">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-wind" viewBox="0 0 16 16">
+                    <path d="M12.5 2A2.5 2.5 0 0 0 10 4.5a.5.5 0 0 1-1 0A3.5 3.5 0 1 1 12.5 8H.5a.5.5 0 0 1 0-1h12a2.5 2.5 0 0 0 0-5m-7 1a1 1 0 0 0-1 1 .5.5 0 0 1-1 0 2 2 0 1 1 2 2h-5a.5.5 0 0 1 0-1h5a1 1 0 0 0 0-2M0 9.5A.5.5 0 0 1 .5 9h10.042a3 3 0 1 1-3 3 .5.5 0 0 1 1 0 2 2 0 1 0 2-2H.5a.5.5 0 0 1-.5-.5"/>
+                  </svg>
+              </div>
+              <div class="col-md-5 d-flex justify-content-start align-items-center text-start">
+                  <p class="m-0" style="font-size: 1.3rem;">Wind: {{weather.current.wind_kph}}km/h</p>
+              </div>
+            </div>
+            <div class="row mt-1">
+              <div class="col-md-1 d-flex justify-content-end align-items-center" style="min-height: 1rem;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-sun-fill" viewBox="0 0 16 16">
+                  <path d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8m10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0m-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0m9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707M4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708"/>
+                </svg>
+              </div>
+              <div class="col-md-5 d-flex justify-content-start align-items-center text-start">
+                  <p class="m-0" style="font-size: 1.3rem;">UV Index: {{weather.current.uv}}</p>
+              </div>
+              <div class="col-md-1 d-flex justify-content-end align-items-center" style="min-height: 1rem;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-droplet" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M7.21.8C7.69.295 8 0 8 0q.164.544.371 1.038c.812 1.946 2.073 3.35 3.197 4.6C12.878 7.096 14 8.345 14 10a6 6 0 0 1-12 0C2 6.668 5.58 2.517 7.21.8m.413 1.021A31 31 0 0 0 5.794 3.99c-.726.95-1.436 2.008-1.96 3.07C3.304 8.133 3 9.138 3 10a5 5 0 0 0 10 0c0-1.201-.796-2.157-2.181-3.7l-.03-.032C9.75 5.11 8.5 3.72 7.623 1.82z"/>
+                  <path fill-rule="evenodd" d="M4.553 7.776c.82-1.641 1.717-2.753 2.093-3.13l.708.708c-.29.29-1.128 1.311-1.907 2.87z"/>
+                </svg>
+              </div>
+              <div class="col-md-5 d-flex justify-content-start align-items-center text-start">
+                  <p class="m-0" style="font-size: 1.3rem;">Humidity: {{ weather.current.humidity }}%</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Columna Derecha (Pronóstico de los Próximos Días) -->
+    <div class="col-md-4">
+      <div class="row card card-body " *ngIf="weather && weather.location && weather.current">
+        <p style="margin-bottom: 0;">7-Day Forecast</p>
+        <div *ngFor="let day of weather.forecast.forecastday.slice(1, 8); let i = index" class="col-md-12">
+          <div class=" text-center mt-1 d-flex align-items-center justify-content-center" 
+              style="min-height: 6rem; border-bottom: 1px solid #ccc;" 
+              [ngStyle]="{'border-bottom': i !== weather.forecast.forecastday.slice(1, 8).length - 1 ? '1px solid #ccc' : 'none'}">
+            <div class="row w-100 d-flex align-items-center text-center">
+              <!-- Columna del Día -->
+              <div class="col-md-4 d-flex justify-content-center align-items-center">
+                <h3 class="m-0" style="font-size: 1.1rem; font-weight: normal;">{{ day.date | date:'EEEE' }}</h3>
+              </div>
+              <!-- Columna del Ícono y Condición -->
+              <div class="col-md-4 d-flex flex-column align-items-center justify-content-center">
+                <img [src]="day.day.condition.icon" class="img-fluid" alt="Weather icon" style="max-width: 50%; height: auto;">
+                <p class="m-0">{{ day.day.condition.text }}</p>
+              </div>
+              <!-- Columna de las Temperaturas -->
+              <div class="col-md-4 d-flex justify-content-center align-items-center">
+                <p class="m-0" style="white-space: nowrap;">{{ day.day.maxtemp_c }} / {{ day.day.mintemp_c }}°C</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="row mt-4 d-flex align-items-stretch justify-content-center">
-    <div *ngFor="let day of weather.forecast.forecastday.slice(1, 7)" class="col-md-2">
-      <div class="card card-body text-center mt-1 align-items-center justify-content-center" style="min-height: 17rem;"> <!-- Establecer una altura fija para las tarjetas -->
-        <h3 class="m-0">{{ day.date | date:'EEEE' }}</h3> <!-- Muestra el día de la semana -->
-        <img [src]="day.day.condition.icon" class="img-fluid mx-auto" alt="Weather icon" style="max-width: 60%; height: auto;"> <!-- Ajusta el tamaño de la imagen -->
-        <h4 class="m-0" style="font-size: 1.5rem;">Avg: {{ day.day.avgtemp_c }}°C</h4> <!-- Temperatura promedio -->
-        <p class="m-0">{{ day.day.condition.text }}</p> <!-- Texto de la condición -->
-      </div>
-    </div>
-  </div>
-  
-  
 </div>

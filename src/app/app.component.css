@@ -1,5 +1,9 @@
-
+.hola{
+    background-color: red;
+}
+.hola2{
+    background-color: blue;
+}
 .card{
-    /*background-color: #827ABB;*/
-    background: linear-gradient(to right, #9791C7, #8D86C1, #827ABB, #766DB4);  
+    background-color: #04080F;
 }

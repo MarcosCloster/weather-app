@@ -48,4 +48,12 @@ export class AppComponent implements OnInit{
     }
   }
 
+  getFilteredHours() {
+    return this.weather.forecast.forecastday[0].hour.filter((h:any) => {
+      const hour = new Date(h.time).getHours();
+      return [6, 9, 12, 15, 18, 21].includes(hour);
+    });
+  }
 }
+
+
